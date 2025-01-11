@@ -15,19 +15,20 @@ class User(APIView):
             "email": request.user.email,
             "username": request.user.username,
             "description": request.user.description,
-            "coins": request.user.startups,
+            "startups": request.user.startups,
         }
         return Response(data, status=status.HTTP_200_OK)
 
-    def put(self, request): #изменение данных(кроме пароля)
+    def put(self, request): #изменение данных
         serializer = UserEditSerialize(data=request.data)
         if serializer.is_valid():
             event = serializer.update(serializer.data)
             return Response("Данные обновлены", status=status.HTTP_200_OK)
         return Response("Ошибка валидации данных", status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request): #изменение пароля
-        pass
+    def post(self, request): #выход
+        logout(request)
+        return Response("Вы вышли из системы!", status=status.HTTP_200_OK)
 
     def delete(self, request): #удаление пользователя
         pass
@@ -45,7 +46,7 @@ def auth(request): #авторизация
                 user_auth = authenticate(request, email=email, password=password)
                 if user_auth is not None:
                     login(request, user_auth)
-                    return Response("Вы вошли в систему!",status=status.HTTP_200_OK)
+                    return Response("Успешно!", status=status.HTTP_200_OK)
             return Response("Пароль неверный", status=status.HTTP_400_BAD_REQUEST)
         return Response("Пользователь с такой почтой не найден", status=status.HTTP_404_NOT_FOUND)
     except:

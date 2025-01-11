@@ -1,29 +1,44 @@
 @import './base.css';
+@import 'css_modules/forms.css';
+@import 'css_modules/anime_on_load.css';
+
+* {
+  font-family: "Rubik", sans-serif;
+  text-decoration: none;
+  color: white;
+}
 
 body {
-  background-color: rgb(148, 148, 148);
+  background: linear-gradient(329deg, rgba(0,43,54,1) 0%, rgba(0,0,0,1) 100%) fixed;
 }
 
 .router-text {
-  font-family: monospace;
-  text-decoration: none;
   color: white;
   font-size: 25px;
 }
 
 .active-router {
-  color: black;
+  color: rgb(0, 161, 197);
 }
 
-.loading {
-  display:inline-block;
-  clip-path: inset(0 3ch 0 0);
-  animation: loading 1s steps(4) infinite;
+.loading::after {
+    content: '\00a0\00a0\00a0';
+    animation: progress-ellipsis 1.5s infinite;
 }
-@keyframes loading {
-  to {
-    clip-path: inset(0 -1ch 0 0);
-  }
+
+@keyframes progress-ellipsis {
+    0% {
+        content: '\00a0\00a0\00a0';
+    }
+    30% {
+        content: '.\00a0\00a0';
+    }
+    60% {
+        content: '..\00a0';
+    }
+    90% {
+        content: '...';
+    }
 }
 
 .smooth-appearance {
@@ -37,4 +52,33 @@ body {
   to {
     opacity: 1;
   }
+}
+
+.center-block-auth {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  background-color: rgba(0,43,54,1);
+  width: 70%;
+  max-width: 800px;
+  flex-wrap: wrap;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 70px;
+}
+
+.between-block {
+  display: flex;
+  justify-content: space-between;
+}
+
+.section-input {
+  margin: 10px;
+}
+
+.text-hello {
+  margin: 0px 0px 20px 0px;
+  width: 100%;
+  text-align: center;
 }

@@ -7,20 +7,28 @@ const load_el = useTemplateRef('loading')
 
 const getUser = async () => {
   loading.value = true
-  try {
-    const response = await fetch('http://127.0.0.1:8000/api/users/user');
-    // неисправность с получением запрета на доступ к пользователю(не авторизован)
-    if (response.ok) {
-      const fetchedUser = await response.json();
-      user.value = fetchedUser;
-      console.log(user.value); 
-    } else if (response.status == 301) {
 
+  try {
+    const response = await fetch(`http://localhost/api/users/user/`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.status === 403) {
+      user.value = null
+    } else if (!response.ok) {
+      alert("Ошибка на стороне сервера, повторите попытку позже")
+      throw new Error('Network response was not ok');
+    } else {
+      user.value = await response.json();
     }
   } catch {
-    alert("Ошибка на стороне сервера, попробуйте позже")
-  } 
-  let opacity = 1; 
+    alert("Ошибка на стороне сервера, повторите попытку позже")
+  }
+
+  let opacity = 1;
   const interval = setInterval(() => {
     opacity -= 0.1;
     if (opacity <= 0) {
@@ -32,19 +40,23 @@ const getUser = async () => {
 }
 
 onMounted(() => {
-  document.title = 'Главная';
   getUser(); 
 });
 </script>
 
 
 <template>
-  <nav>
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  </head>
+  <nav class="anime-opacity-smooth">
     <RouterLink to="/" class="router-text">Главная</RouterLink>
     <RouterLink to="/startups" class="router-text">Стартапы</RouterLink>
     <RouterLink to="/profile" class="router-text smooth-appearance" v-if="user != null && !loading">Профиль</RouterLink>
     <RouterLink to="/auth" class="router-text smooth-appearance" v-if="user == null && !loading">Авторизация</RouterLink>
-    <div class="loading router-text" v-if="loading" ref="loading">Проверка профиля...</div>
+    <div class="loading router-text" v-if="loading" ref="loading">Соединение</div>
   </nav>
   <main>
     <RouterView />
@@ -59,7 +71,7 @@ onMounted(() => {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: rgb(173, 173, 173);
+    background-color: rgba(0,43,54,1);
     border-radius: 15px;
   }
 </style>

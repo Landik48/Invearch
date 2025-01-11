@@ -1,0 +1,14 @@
+.anime-opacity-smooth {
+    opacity: 0;
+    animation: anime-opacity-smooth 1s forwards;
+}
+
+@keyframes anime-opacity-smooth {
+    from {
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
