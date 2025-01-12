@@ -17,13 +17,29 @@ class UsersManager(BaseUserManager):
 
         return self.create_user(email, username, password, **extra_fields)
 
+class Startups(models.Model):
+    # owners = models.JSONField(default=list)
+    startupid = models.AutoField(primary_key=True, unique=True)
+    name = models.CharField(unique=True, max_length=200)
+    description = models.CharField(max_length=2000, blank=True, default='')
+    picture = models.CharField(max_length=500, blank=True, default='')
+    responses = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.startupid)
+    
+    class Meta:
+        verbose_name = 'Стартап'
+        verbose_name_plural = 'Стартапы'
+
+
 class Users(AbstractBaseUser, PermissionsMixin):
     userid = models.AutoField(primary_key=True, unique=True)
     username = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
     password = models.CharField(max_length=100) 
     description = models.CharField(max_length=500, blank=True, default='')
-    startups = models.JSONField(default=list)
+    startups = models.ForeignKey(Startups, on_delete=models.SET_DEFAULT, null=True, default=None)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -39,18 +55,3 @@ class Users(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
-class Startups(models.Model):
-    owners = models.JSONField(default=list)
-    startupid = models.AutoField(primary_key=True, unique=True)
-    name = models.CharField(unique=True, max_length=200)
-    description = models.CharField(max_length=2000, blank=True, default='')
-    picture = models.CharField(max_length=500, blank=True, default='')
-    responses = models.IntegerField(default=0)
-
-    def __str__(self):
-        return str(self.name)
-
-    class Meta:
-        verbose_name = 'Стартап'
-        verbose_name_plural = 'Стартапы'

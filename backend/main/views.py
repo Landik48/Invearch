@@ -10,12 +10,13 @@ from django.contrib.auth.hashers import check_password, make_password
 class User(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request): #получение пользователя
+        # startups = получение модельки для содержательного отображения
         data = {
             "userid": request.user.userid,
             "email": request.user.email,
             "username": request.user.username,
             "description": request.user.description,
-            "startups": request.user.startups,
+            "startups": str(request.user.startups),
         }
         return Response(data, status=status.HTTP_200_OK)
 
