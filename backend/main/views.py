@@ -24,10 +24,13 @@ class User(APIView):
         if serializer.is_valid():
             if serializer.check_len(serializer.data):
                 if serializer.check_pass(serializer.data):
-                    # try:
-                    #ручное обновление данных
+                    user = Users.objects.get(userid=request.user.userid)
+                    user.username = request.data['username']
+                    user.email = request.data['email']
+                    user.description = request.data['description']
+                    user.password = make_password(request.data['password'])
+                    user.save()
                     return Response("Данные обновлены", status=status.HTTP_200_OK)
-                
                 else:
                     return Response("Слабый пароль", status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -74,15 +77,15 @@ def register(request): #регистрация
                 if user_serializer.is_valid():
                     password = user_serializer.validated_data.get('password')
                     user_serializer.save(password=make_password(password))
-                    return Response('register complete')
+                    return Response('Вы зарегистрированы', status=status.HTTP_200_OK)
                 else:
-                    return Response("email error")
+                    return Response("Почта занята")
             else:
-                return Response("password error", status=status.HTTP_400_BAD_REQUEST)
+                return Response("Слабый пароль", status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response("limit error", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Слишком много символов", status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response("error validate", status=status.HTTP_400_BAD_REQUEST)
+        return Response("Ошибка данных", status=status.HTTP_400_BAD_REQUEST)
 
 
 class Startups(APIView): 
