@@ -1,29 +1,41 @@
 <script setup>
-import {getUser, user} from "@/shared/modules.js"
-import {ref, useTemplateRef} from "vue";
+import {getCookie, getUser, user} from "@/shared/modules.js"
+import {computed, reactive, ref, useTemplateRef} from "vue";
 import { useRouter } from 'vue-router';
 
-const btn = useTemplateRef('btn')
-const confirmation_block = useTemplateRef('confirmation')
+const btn_del = useTemplateRef('btn_del')
+const btn_exit = useTemplateRef('btn_exit')
+const confirmation_block = useTemplateRef('confirmation_block')
 const router = useRouter();
-const confirmation = ref("")
 const main = useTemplateRef('main')
+const csrfToken = getCookie('csrftoken')
 
-async function OnClick(option) {
-  btn.value.classList.add('loading')
-  btn.value.innerHTML = "Загрузка"
+const option = reactive({
+  "option": "",
+  "input":""
+})
+
+const isButtonDisabled = computed(() => {
+  return option.input !== user.value.username;
+});
+
+async function OnClick(option_el, btn) {
+  option.option = option_el
+  btn.classList.add('loading');
+  btn.innerHTML = "Загрузка";
   const response = await fetch(`http://localhost/api/users/user/`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-    body: JSON.stringify({"option": option}),
-    }
+      'X-CSRFToken': csrfToken || '',
+    },
+    body: JSON.stringify(option),
   });
   if (response.status === 200) {
-    btn.value.style.backgroundColor = "#38ef7d"
-    btn.value.innerHTML = "Успешно!"
-    btn.value.classList.remove('loading')
+    btn.style.backgroundColor = "#38ef7d"
+    btn.innerHTML = "Успешно!"
+    btn.classList.remove('loading')
     setTimeout(() => {
       router.push('/auth')
     }, 1000)
@@ -35,32 +47,49 @@ async function OnClick(option) {
 </script>
 
 <template>
-  <div class="confirmation_block" ref='confirmation'>
+  <div class="confirmation_block" ref="confirmation_block">
     <h3>Напишите ваше имя для подтверждения</h3>
     <div class="section-input form__group field">
       <input class="form__field" type="text" id="confirmation" placeholder="Confirmation"
-             :value="confirmation.value"
-             @input="event => confirmation.value = event.target.value"/>
+             v-model="option.input"
+             @input="event => option.input = event.target.value"/>
       <label class="between-block form__label" for="confirmation">{{ user.username }}</label>
       <button class="send-btn mini-btn"
               @click='
-              confirmation.value = " ";
+              option.input = "";
               confirmation_block.style.display = "none";
               main.style.filter = "blur(0px)";'
-              ref="btn">Отмена</button>
-      <button class="exit-btn mini-btn" @click="OnClick('delete')" ref="btn"
-      :disabled="confirmation.value != user.username">Удалить аккаунт</button>
+              >Отмена</button>
+      <button class="exit-btn mini-btn" @click="OnClick('delete', btn_del)" ref="btn_del"
+      :disabled="isButtonDisabled">Удалить аккаунт</button>
     </div>
   </div>
   <div class="main" ref="main">
     <div class="block-user">
+      <h2 class="title">Пользователь</h2>
+      <h3>Имя: {{ user.username }}</h3>
+      <h3>Актуальная почта: {{ user.email }} </h3>
+      <p><h3>Обо мне:</h3> {{ user.description }}</p><br>
+      <h3>Мои стартапы:</h3>
+      <p class="line-startups" v-for="startup in user.startups"> - {{ startup }}</p>
+      <div class="group_btns">
+        <button class="exit-btn" @click="OnClick('exit', btn_exit)" ref="btn_exit">Выход</button>
+        <button class="exit-btn"
+          @click="main.style.filter = 'blur(5px)'; confirmation_block.style.display = 'flex'">Удалить аккаунт</button>
+      </div>
+    </div>
+
+    <div class="block-user">
+      <h2 class="title">Изменение данных</h2>
       <h3>Имя: {{ user.username }}</h3>
       <h3>Актуальная почта: {{ user.email }} </h3>
       <p><h3>Обо мне:</h3> {{ user.description }}</p>
-      <div class="group_btns">
-        <button class="exit-btn" @click="OnClick('exit')">Выход</button>
-        <button class="exit-btn"
-          @click="main.style.filter = 'blur(5px)'; confirmation_block.style.display = 'flex'">Удалить аккаунт</button>
+      <div class="section-input form__group field">
+        <input class="form__field" type="text" id="confirmation" placeholder="Confirmation"
+               v-model="option.input"
+               @input="event => option.input = event.target.value"/>
+        <label class="between-block form__label" for="confirmation">{{ user.username }}</label>
+        <button class="send-btn" @click=''>Отмена</button>
       </div>
     </div>
   </div>
@@ -71,6 +100,7 @@ async function OnClick(option) {
   width: 100%;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .block-user {
@@ -140,5 +170,27 @@ p {
 
 h3 {
   margin-bottom: 0;
+}
+
+.exit-btn:disabled {
+  background-color: #9b9b9b;
+}
+
+.send-btn {
+  background-color: #0eb855;
+}
+
+.title {
+  text-align: center;
+  width: 100%;
+}
+
+p {
+  width: 100%;
+}
+
+.line-startups {
+  margin-left: 20px;
+  margin-top: 10px;
 }
 </style>

@@ -46,7 +46,7 @@ class Startups(models.Model):
     name = models.CharField(unique=True, max_length=200)
     description = models.CharField(max_length=2000, blank=True, default='')
     picture = models.CharField(max_length=500, blank=True, default='')
-    stars = models.IntegerField(default=0)
+    responses = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.name)

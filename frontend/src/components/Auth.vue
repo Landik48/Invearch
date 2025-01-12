@@ -36,10 +36,9 @@ async function OnClick() {
     await getUser()
     console.log(user)
   } else {
-
-    btn.value.style.background = "red"
+    btn.value.style.backgroundColor = "red"
     setTimeout(() => {
-      btn.value.style.background = "#9b9b9b"
+      btn.value.style.backgroundColor = "#9b9b9b"
       btn.value.innerHTML = "Войти"
       form.password = ""
     }, 2000)

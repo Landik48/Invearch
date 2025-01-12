@@ -20,18 +20,29 @@ class User(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
     def put(self, request): #изменение данных
-        serializer = UserEditSerialize(data=request.data)
+        serializer = UserRegister(data=request.data)
         if serializer.is_valid():
-            event = serializer.update(serializer.data)
-            return Response("Данные обновлены", status=status.HTTP_200_OK)
-        return Response("Ошибка валидации данных", status=status.HTTP_400_BAD_REQUEST)
+            if serializer.check_len(serializer.data):
+                if serializer.check_pass(serializer.data):
+                    # try:
+                    #ручное обновление данных
+                    return Response("Данные обновлены", status=status.HTTP_200_OK)
+                
+                else:
+                    return Response("Слабый пароль", status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response("Слишком много символов", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response("Ошибка валидации данных", status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request): #выход
-        logout(request)
-        return Response("Вы вышли из системы!", status=status.HTTP_200_OK)
-
-    def delete(self, request): #удаление пользователя
-        pass
+    def post(self, request): #выход и удаление пользователя
+        if request.data['option'] == 'exit':
+            logout(request)
+            return Response("Вы вышли из системы!", status=status.HTTP_200_OK)
+        elif request.data['option'] == 'delete':
+            user = Users.objects.get(userid=int(request.user.userid))
+            user.delete()
+            return Response("Аккаунт удалён", status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
