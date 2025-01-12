@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 
 const btn_del = useTemplateRef('btn_del')
 const btn_exit = useTemplateRef('btn_exit')
+const btn_edit = useTemplateRef('btn_edit')
 const confirmation_block = useTemplateRef('confirmation_block')
 const router = useRouter();
 const main = useTemplateRef('main')
@@ -19,19 +20,53 @@ const isButtonDisabled = computed(() => {
   return option.input !== user.value.username;
 });
 
+const form = reactive({
+  username: "",
+  email: "",
+  description: "",
+  password: ""
+})
+
 async function OnClick(option_el, btn) {
-  option.option = option_el
   btn.classList.add('loading');
   btn.innerHTML = "Загрузка";
-  const response = await fetch(`http://localhost/api/users/user/`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken || '',
-    },
-    body: JSON.stringify(option),
-  });
+  let response = null
+  if (option_el !== "edit") {
+    option.option = option_el
+    response = await fetch(`http://localhost/api/users/user/`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken || '',
+      },
+      body: JSON.stringify(option),
+    });
+
+    if (response.status !== 200) {
+      alert("Неуспешная операция, попробуйте позже")
+    }
+  } else {
+    response = await fetch(`http://localhost/api/users/user/`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken || '',
+      },
+      body: JSON.stringify(form),})
+
+    const data = await response.json()
+    if (response.status !== 200) {
+      btn.classList.remove('loading');
+      btn.style.background = "red"
+      btn.innerHTML = data
+      setTimeout(() => {
+        btn.style.background = "#9b9b9b"
+        btn.innerHTML = "Изменить"
+      }, 2000)
+    }
+  }
   if (response.status === 200) {
     btn.style.backgroundColor = "#38ef7d"
     btn.innerHTML = "Успешно!"
@@ -40,8 +75,6 @@ async function OnClick(option_el, btn) {
       router.push('/auth')
     }, 1000)
     await getUser()
-  } else {
-    alert("Неуспешная операция, попробуйте позже")
   }
 }
 </script>
@@ -54,7 +87,7 @@ async function OnClick(option_el, btn) {
              v-model="option.input"
              @input="event => option.input = event.target.value"/>
       <label class="between-block form__label" for="confirmation">{{ user.username }}</label>
-      <button class="send-btn mini-btn"
+      <button class="send-btn mini-btn cancel-btn"
               @click='
               option.input = "";
               confirmation_block.style.display = "none";
@@ -81,15 +114,41 @@ async function OnClick(option_el, btn) {
 
     <div class="block-user">
       <h2 class="title">Изменение данных</h2>
-      <h3>Имя: {{ user.username }}</h3>
-      <h3>Актуальная почта: {{ user.email }} </h3>
-      <p><h3>Обо мне:</h3> {{ user.description }}</p>
+      <h4 class="title">
+        <span style="color: red">Важно!</span>
+        на редактирование данных отправляются данные всех форм
+      </h4>
       <div class="section-input form__group field">
-        <input class="form__field" type="text" id="confirmation" placeholder="Confirmation"
-               v-model="option.input"
-               @input="event => option.input = event.target.value"/>
-        <label class="between-block form__label" for="confirmation">{{ user.username }}</label>
-        <button class="send-btn" @click=''>Отмена</button>
+        <input class="form__field" type="text" id="username" placeholder="Name" :value="form.username"
+               @input="event => form.username = event.target.value"/>
+        <label class="between-block form__label" for="username">Ваше имя:</label>
+      </div>
+
+      <div class="section-input form__group field">
+        <input class="form__field" type="text" id="email" placeholder="Email" :value="form.email"
+               @input="event => form.email = event.target.value"/>
+        <label class="between-block form__label" for="email">Ваша почта:</label>
+      </div>
+
+      <div class="section-input form__group field">
+        <input class="form__field" type="password" id="password" placeholder="Password" :value="form.password"
+               @input="event => form.password = event.target.value"/>
+        <label class="between-block form__label" for="password">Изменяемый пароль:</label>
+      </div>
+
+      <div class="section-input form__group field">
+          <textarea class="form__field description-edit" type="text" id="description" placeholder="Description" :value="form.description"
+                    @input="event => form.description = event.target.value"/>
+        <label class="between-block form__label" for="description">Немного о себе:</label>
+      </div>
+
+      <div class="section-btn">
+        <button class="send-btn edit-btn" @click="OnClick('edit', btn_edit)" ref="btn_edit"
+                :disabled="form.password.length === 0
+            || form.email.length === 0
+            || form.description.length === 0
+            || form.username.length === 0">
+          Изменить</button>
       </div>
     </div>
   </div>
@@ -176,7 +235,7 @@ h3 {
   background-color: #9b9b9b;
 }
 
-.send-btn {
+.cancel-btn {
   background-color: #0eb855;
 }
 
@@ -192,5 +251,11 @@ p {
 .line-startups {
   margin-left: 20px;
   margin-top: 10px;
+}
+
+.section-btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>

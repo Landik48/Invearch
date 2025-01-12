@@ -1,11 +1,12 @@
 <script setup>
 import {onMounted, reactive, ref, useTemplateRef} from 'vue';
-import {getUser, user} from "@/shared/modules.js";
+import {getCookie, getUser, user} from "@/shared/modules.js";
 import { useRouter } from 'vue-router';
 
 const btn = useTemplateRef('btn')
 const data = ref(null)
 const router = useRouter()
+const csrfToken = getCookie('csrftoken')
 
 const form = reactive({
   username: "",
@@ -22,6 +23,7 @@ async function OnClick() {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken || '',
     },
     body: JSON.stringify(form),
   });
@@ -34,7 +36,6 @@ async function OnClick() {
 
     }, 1000)
     await getUser()
-    console.log(user)
   } else {
     btn.value.style.background = "red"
     setTimeout(() => {

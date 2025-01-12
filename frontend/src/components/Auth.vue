@@ -48,7 +48,7 @@ async function OnClick() {
 }
 
 onMounted(() => {
-  document.title = 'Регистация';
+  document.title = 'Авторизация';
 });
 </script>
 

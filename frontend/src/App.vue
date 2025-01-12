@@ -54,5 +54,7 @@ onMounted(() => {
     align-items: center;
     background-color: rgba(0,43,54,1);
     border-radius: 15px;
+    max-width: 840px;
+    margin: 0 auto;
   }
 </style>
