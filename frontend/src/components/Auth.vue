@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, reactive, useTemplateRef, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+import { user, getUser, getCookie } from '@/shared/modules.js'
 
 const btn = useTemplateRef('btn')
 const csrfToken = getCookie('csrftoken')
@@ -11,13 +12,6 @@ const form = reactive({
   email: "",
   password: "",
 })
-
-function getCookie(name) {
-  const matches = document.cookie.match(new RegExp(
-      '(?:^|; )' + name.replace(/([.$?*|{}()[\]\/+^])/g, '\$1') + '=([^;]*)(;|$)'
-  ));
-  return matches ? decodeURIComponent(matches[1]) : null;
-}
 
 async function OnClick() {
   btn.value.classList.add('btn-loading', 'loading')
@@ -34,16 +28,20 @@ async function OnClick() {
 
   data.value = await response.json()
   if (response.status === 200) {
+    btn.value.style.backgroundColor = "#38ef7d"
     setTimeout(() => {
       router.push('/')
-      btn.value.style.background = "#38ef7d"
+
     }, 1000)
+    await getUser()
+    console.log(user)
   } else {
-    form.password = ""
+
     btn.value.style.background = "red"
     setTimeout(() => {
       btn.value.style.background = "#9b9b9b"
       btn.value.innerHTML = "Войти"
+      form.password = ""
     }, 2000)
   }
   btn.value.classList.remove('btn-loading', 'loading')

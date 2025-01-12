@@ -1,33 +1,14 @@
 <script setup>
 import { onMounted, ref, useTemplateRef } from 'vue';
+import { user, getUser } from '@/shared/modules.js'
 
-const user = ref(null);
+// const user = ref(null);
 const loading = ref(false)
 const load_el = useTemplateRef('loading')
 
-const getUser = async () => {
+const updateUser = async () => {
   loading.value = true
-
-  try {
-    const response = await fetch(`http://localhost/api/users/user/`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.status === 403) {
-      user.value = null
-    } else if (!response.ok) {
-      alert("Ошибка на стороне сервера, повторите попытку позже")
-      throw new Error('Network response was not ok');
-    } else {
-      user.value = await response.json();
-    }
-  } catch {
-    alert("Ошибка на стороне сервера, повторите попытку позже")
-  }
-
+  await getUser()
   let opacity = 1;
   const interval = setInterval(() => {
     opacity -= 0.1;
@@ -40,7 +21,7 @@ const getUser = async () => {
 }
 
 onMounted(() => {
-  getUser(); 
+  updateUser();
 });
 </script>
 

@@ -54,14 +54,14 @@ def auth(request): #авторизация
 
 
 @api_view(['POST'])
-def register(self, request): #регистрация
+def register(request): #регистрация
     serializer = UserRegister(data=request.data)
     if serializer.is_valid():
         if serializer.check_len(serializer.data):
             if serializer.check_pass(serializer.data):
                 user_serializer = UsersSerialize(data=serializer.data)
-                password = user_serializer.validated_data.get('password')
                 if user_serializer.is_valid():
+                    password = user_serializer.validated_data.get('password')
                     user_serializer.save(password=make_password(password))
                     return Response('register complete')
                 else:

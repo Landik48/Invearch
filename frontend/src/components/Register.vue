@@ -1,7 +1,11 @@
 <script setup>
-import { onMounted, reactive, useTemplateRef } from 'vue';
+import {onMounted, reactive, ref, useTemplateRef} from 'vue';
+import {getUser, user} from "@/shared/modules.js";
+import { useRouter } from 'vue-router';
 
 const btn = useTemplateRef('btn')
+const data = ref(null)
+const router = useRouter()
 
 const form = reactive({
   username: "",
@@ -10,9 +14,36 @@ const form = reactive({
   description: "",
 })
 
-function OnClick() {
+async function OnClick() {
   btn.value.classList.add('btn-loading', 'loading')
   btn.value.innerHTML = "Загрузка"
+  const response = await fetch(`http://localhost/api/users/register/`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(form),
+  });
+
+  data.value = await response.json()
+  if (response.status === 200) {
+    btn.value.style.backgroundColor = "#38ef7d"
+    setTimeout(() => {
+      router.push('/auth')
+
+    }, 1000)
+    await getUser()
+    console.log(user)
+  } else {
+    btn.value.style.background = "red"
+    setTimeout(() => {
+      btn.value.style.background = "#9b9b9b"
+      btn.value.innerHTML = "Войти"
+    }, 2000)
+  }
+  btn.value.classList.remove('btn-loading', 'loading')
+  btn.value.innerHTML = data.value
 }
 
 onMounted(() => {

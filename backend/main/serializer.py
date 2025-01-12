@@ -27,7 +27,6 @@ class UserEditSerialize(serializers.Serializer):
         return data
     
 class UserRegister(serializers.Serializer):
-    userid = serializers.IntegerField(required=True)
     username = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
@@ -54,8 +53,8 @@ class UserRegister(serializers.Serializer):
             else: 
                 return True
     def validate(self, data):
-        values = ['username', 'description', 'email', 'userid', 'password'] 
-        if len(data) != 5 or not all(value in data for value in values):
+        values = ['username', 'description', 'email', 'password'] 
+        if len(data) != 4 or not all(value in data for value in values):
              raise serializers.ValidationError("Error validate")
         return data
     
