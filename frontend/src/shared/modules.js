@@ -1,10 +1,17 @@
 import {ref} from "vue";
 
 const user = ref(null);
+const startups = ref(null);
 
-const getUser = async () => {
+const getData = async (object, name_operation) => {
     try {
-        const response = await fetch(`http://localhost/api/users/user/`, {
+        let url = ''
+        if (name_operation === 'user') {
+            url = `http://localhost/api/users/user/`
+        } else if (name_operation === 'startups') {
+            url = `http://localhost/api/startups/`;
+        }
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -12,12 +19,12 @@ const getUser = async () => {
             },
         });
         if (response.status === 403) {
-            user.value = null
+            object.value = null
         } else if (!response.ok) {
             alert("Ошибка на стороне сервера, повторите попытку позже")
             throw new Error('Network response was not ok');
         } else {
-            user.value = await response.json();
+            object.value = await response.json();
         }
     } catch {
         alert("Ошибка на стороне сервера, повторите попытку позже")
@@ -31,4 +38,4 @@ function getCookie(name) {
     return matches ? decodeURIComponent(matches[1]) : null;
 }
 
-export {user as default, user, getUser, getCookie};
+export {user as default, user, getData, getCookie, startups};

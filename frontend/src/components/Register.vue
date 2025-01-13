@@ -1,6 +1,6 @@
 <script setup>
 import {onMounted, reactive, ref, useTemplateRef} from 'vue';
-import {getCookie, getUser, user} from "@/shared/modules.js";
+import {getCookie, getData, user} from "@/shared/modules.js";
 import { useRouter } from 'vue-router';
 
 const btn = useTemplateRef('btn')
@@ -35,7 +35,7 @@ async function OnClick() {
       router.push('/auth')
 
     }, 1000)
-    await getUser()
+    await getData(user, 'user')
   } else {
     btn.value.style.background = "red"
     setTimeout(() => {

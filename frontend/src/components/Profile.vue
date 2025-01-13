@@ -1,5 +1,5 @@
 <script setup>
-import {getCookie, getUser, user} from "@/shared/modules.js"
+import {getCookie, getData, user} from "@/shared/modules.js"
 import {computed, reactive, ref, useTemplateRef} from "vue";
 import { useRouter } from 'vue-router';
 
@@ -74,7 +74,7 @@ async function OnClick(option_el, btn) {
     setTimeout(() => {
       router.push('/auth')
     }, 1000)
-    await getUser()
+    await getData(user, 'user')
   }
 }
 </script>
@@ -98,13 +98,15 @@ async function OnClick(option_el, btn) {
     </div>
   </div>
   <div class="main" ref="main">
-    <div class="block-user">
+    <div class="block-user anime-opacity-smooth">
       <h2 class="title">Пользователь</h2>
       <h3>Имя: {{ user.username }}</h3>
       <h3>Актуальная почта: {{ user.email }} </h3>
       <p><h3>Обо мне:</h3> {{ user.description }}</p><br>
       <h3>Мои стартапы:</h3>
-      <p class="line-startups" v-for="startup in user.startups"> - {{ startup }}</p>
+      <p class="line-startups" v-for="startup in user.my_startups"> - {{ startup }}</p>
+      <h3>Мои отклики:</h3>
+      <p class="line-startups" v-for="startup in user.my_parties"> - {{ startup }}</p>
       <div class="group_btns">
         <button class="exit-btn" @click="OnClick('exit', btn_exit)" ref="btn_exit">Выход</button>
         <button class="exit-btn"
@@ -112,7 +114,7 @@ async function OnClick(option_el, btn) {
       </div>
     </div>
 
-    <div class="block-user">
+    <div class="block-user anime-opacity-smooth">
       <h2 class="title">Изменение данных</h2>
       <h4 class="title">
         <span style="color: red">Важно!</span>
@@ -180,25 +182,6 @@ p {
   margin: 0;
 }
 
-.exit-btn {
-  font-size: 16px;
-  background-color: red;
-  border: none;
-  border-radius: 5px;
-  width: 200px;
-  height: 50px;
-  margin: 10px;
-  transition: .3s;
-  transform: scale(1);
-  filter: grayscale(30%);
-}
-
-.exit-btn:hover {
-  filter: grayscale(0%);
-  transition: .3s;
-  transform: scale(0.95);
-}
-
 .group_btns {
   display: flex;
   justify-content: center;
@@ -208,23 +191,6 @@ p {
 
 .send-btn {
   width: 200px;
-}
-
-.confirmation_block {
-  width: 70%;
-  max-width: 800px;
-  background-color: rgba(0,43,54,1);
-  border-radius: 10px;
-  padding: 10px;
-  display: none;
-  justify-content: center;
-  flex-wrap: wrap;
-  text-align: center;
-  position: absolute;
-  z-index: 100;
-  margin: auto;
-  height: fit-content;
-  top: 0; left: 0; bottom: 0; right: 0;
 }
 
 h3 {
@@ -237,11 +203,6 @@ h3 {
 
 .cancel-btn {
   background-color: #0eb855;
-}
-
-.title {
-  text-align: center;
-  width: 100%;
 }
 
 p {

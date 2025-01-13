@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, reactive, useTemplateRef, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { user, getUser, getCookie } from '@/shared/modules.js'
+import {user, getCookie, getData} from '@/shared/modules.js'
 
 const btn = useTemplateRef('btn')
 const csrfToken = getCookie('csrftoken')
@@ -33,8 +33,7 @@ async function OnClick() {
       router.push('/')
 
     }, 1000)
-    await getUser()
-    console.log(user)
+    await getData(user, 'user')
   } else {
     btn.value.style.backgroundColor = "red"
     setTimeout(() => {

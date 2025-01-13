@@ -1,22 +1,29 @@
+from .models import *
 from .serializer import *
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.hashers import check_password, make_password
+from rest_framework.decorators import api_view, authentication_classes
 
 class User(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request): #получение пользователя
-        # startups = получение модельки для содержательного отображения
+        def get_startups(class_):
+            startups = class_.objects.filter(user=int(request.user.userid))
+            startups_names = []
+            for startup in startups:
+                startups_names.append([startup.startup.startupid, startup.startup.name])
+            return startups_names
         data = {
             "userid": request.user.userid,
             "email": request.user.email,
             "username": request.user.username,
             "description": request.user.description,
-            "startups": str(request.user.startups),
+            "my_startups": get_startups(StartupOwners),
+            "my_parties": get_startups(InterestedParties)
         }
         return Response(data, status=status.HTTP_200_OK)
 
@@ -89,11 +96,14 @@ def register(request): #регистрация
         return Response("Ошибка данных", status=status.HTTP_400_BAD_REQUEST)
 
 
-class Startups(APIView): 
+class StartupsList(APIView): 
     def get(self, request): #информация о стартапе
-        pass
+        startups = Startups.objects.all()
+        serializer = StartupsListSerialize(startups, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request): #связаться с организатором(при его одобрении)
+    @authentication_classes([IsAuthenticated])
+    def post(self, request): #связаться с организатором
         pass
 
     def delete(self, request): #удаление стартапа

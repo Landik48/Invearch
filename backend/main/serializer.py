@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import Users
+from .models import Users, Startups
 import re
+
+class StartupsListSerialize(serializers.ModelSerializer):
+    class Meta:
+        model = Startups
+        fields = '__all__' 
 
 class LoginSerialize(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)

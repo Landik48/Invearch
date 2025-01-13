@@ -18,7 +18,6 @@ class UsersManager(BaseUserManager):
         return self.create_user(email, username, password, **extra_fields)
 
 class Startups(models.Model):
-    # owners = models.JSONField(default=list)
     startupid = models.AutoField(primary_key=True, unique=True)
     name = models.CharField(unique=True, max_length=200)
     description = models.CharField(max_length=2000, blank=True, default='')
@@ -39,7 +38,7 @@ class Users(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=100, unique=True)
     password = models.CharField(max_length=100) 
     description = models.CharField(max_length=500, blank=True, default='')
-    startups = models.ForeignKey(Startups, on_delete=models.SET_DEFAULT, null=True, default=None)
+    social_networks = models.CharField(max_length=100)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -55,3 +54,23 @@ class Users(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
+
+class StartupOwners(models.Model):
+    user = models.ForeignKey(Users, related_name='owned_startups', on_delete=models.CASCADE)
+    startup = models.ForeignKey('Startups', related_name='owners', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'startup')  
+        verbose_name = 'Владелец стартапа'
+        verbose_name_plural = 'Владельцы стартапов'
+
+
+class InterestedParties(models.Model):
+    user = models.ForeignKey(Users, related_name='participated_startups', on_delete=models.CASCADE)
+    startup = models.ForeignKey('Startups', related_name='participants', on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'startup')  
+        verbose_name = 'Участник стартапа'
+        verbose_name_plural = 'Участники стартапов'

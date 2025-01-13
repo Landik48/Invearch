@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, useTemplateRef } from 'vue';
-import { user, getUser } from '@/shared/modules.js'
+import {user, getData, startups} from '@/shared/modules.js'
 
 // const user = ref(null);
 const loading = ref(false)
@@ -8,7 +8,8 @@ const load_el = useTemplateRef('loading')
 
 const updateUser = async () => {
   loading.value = true
-  await getUser()
+  await getData(user, 'user')
+  await getData(startups, 'startups')
   let opacity = 1;
   const interval = setInterval(() => {
     opacity -= 0.1;
