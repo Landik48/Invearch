@@ -12,6 +12,7 @@ const form = reactive({
   username: "",
   email: "",
   password: "",
+  social_networks: "",
   description: "",
 })
 
@@ -60,25 +61,31 @@ onMounted(() => {
         <div class="section-input form__group field">
           <input class="form__field" type="text" id="username" placeholder="Name" :value="form.username"
             @input="event => form.username = event.target.value"/>
-          <label class="between-block form__label" for="username">Ваше имя:</label>
+          <label class="between-block form__label" for="username">Ваше имя</label>
         </div>
 
         <div class="section-input form__group field">
           <input class="form__field" type="text" id="email" placeholder="Email" :value="form.email"
             @input="event => form.email = event.target.value"/>
-          <label class="between-block form__label" for="email">Ваша почта:</label>
+          <label class="between-block form__label" for="email">Ваша почта</label>
         </div>
 
         <div class="section-input form__group field">
           <input class="form__field" type="password" id="password" placeholder="Password" :value="form.password"
             @input="event => form.password = event.target.value"/>
-          <label class="between-block form__label" for="password">Придумайте пароль:</label>
+          <label class="between-block form__label" for="password">Придумайте пароль</label>
+        </div>
+
+        <div class="section-input form__group field">
+          <input class="form__field" type="text" id="social_networks" placeholder="social_networks" :value="form.social_networks"
+                 @input="event => form.social_networks = event.target.value"/>
+          <label class="between-block form__label" for="social_networks">Ваши контакты</label>
         </div>
 
         <div class="section-input form__group field">
           <textarea class="form__field description-edit" type="text" id="description" placeholder="Description" :value="form.description"
             @input="event => form.description = event.target.value"/>
-          <label class="between-block form__label" for="description">Немного о себе:</label>
+          <label class="between-block form__label" for="description">Немного о себе</label>
         </div>
 
         <div class="section-btn">

@@ -1,13 +1,36 @@
 <script setup>
 import {onMounted, reactive, useTemplateRef} from "vue";
-import {getData, user, startups} from "@/shared/modules.js"
+import {getData, user, startups, getCookie} from "@/shared/modules.js"
 
 const confirmation_block = useTemplateRef('confirmation_block')
+const csrfToken = getCookie('csrftoken')
 const main = useTemplateRef('main')
 const option = reactive({
   "input":"",
   'block_btn': false
 })
+const form = reactive({
+  option: "",
+  message: option.input,
+  username: user.username,
+  email: user.email,
+  social_networks: user.social_networks,
+  description: user.description,
+})
+
+async function onClick() {
+  const response = await fetch(`http://localhost/api/users/register/`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken || '',
+    },
+    body: JSON.stringify(form),
+  //   ПЕРЕПИСАТЬ ВСЕ POST МЕТОДЫ В MODULES
+  });
+
+}
 
 onMounted(() => {
   document.title = 'Стартапы';
@@ -38,8 +61,8 @@ onMounted(() => {
 
     <div class="center-block-auth anime-opacity-smooth" v-for="startup in startups">
       <img class="text-auth img-startup" :src="startup.picture" alt="Картинка отсутствует">
-      <h2>Название: {{ startup.name }}</h2>
-      <p class="text-auth">{{ startup.description }}</p>
+      <h2 class="title">Название: {{ startup.name }}</h2>
+      <p class="block-description">{{ startup.description }}</p>
       <button class="send-btn" @click="main.style.filter = 'blur(5px)';
         option.block_btn = true;
         confirmation_block.style.display = 'flex'"

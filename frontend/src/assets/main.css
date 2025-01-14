@@ -65,7 +65,7 @@ body {
   flex-wrap: wrap;
   border-radius: 10px;
   padding: 20px;
-  margin-top: 70px;
+  margin-top: 30px;
 }
 
 .between-block {
@@ -122,4 +122,13 @@ body {
     filter: grayscale(0%);
     transition: .3s;
     transform: scale(0.95);
+}
+
+.block-description {
+    display: block;
+    font-size: 20px;
+    margin-top: 0;
+    width: 100%;
+    word-break: break-all;
+    text-align: center;
 }

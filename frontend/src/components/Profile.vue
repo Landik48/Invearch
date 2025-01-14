@@ -23,6 +23,7 @@ const isButtonDisabled = computed(() => {
 const form = reactive({
   username: "",
   email: "",
+  social_networks: "",
   description: "",
   password: ""
 })
@@ -102,6 +103,7 @@ async function OnClick(option_el, btn) {
       <h2 class="title">Пользователь</h2>
       <h3>Имя: {{ user.username }}</h3>
       <h3>Актуальная почта: {{ user.email }} </h3>
+      <p><h3>Мои контакты:</h3> {{ user.social_networks }}</p><br>
       <p><h3>Обо мне:</h3> {{ user.description }}</p><br>
       <h3>Мои стартапы:</h3>
       <p class="line-startups" v-for="startup in user.my_startups"> - {{ startup }}</p>

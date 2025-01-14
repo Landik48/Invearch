@@ -19,6 +19,7 @@ class UserEditSerialize(serializers.Serializer):
     username = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
     description = serializers.CharField(required=True)
+    social_networks = serializers.CharField(required=True)
     def update(self, validated_data):
         user = Users.objects.get(userid=validated_data['userid'])
         user.username = validated_data['username']
@@ -26,8 +27,8 @@ class UserEditSerialize(serializers.Serializer):
         user.description = validated_data['description']
         return user.save()
     def validate(self, data):
-        values = ['username', 'description', 'email', 'userid']
-        if len(data) != 4 or not all(value in data for value in values):
+        values = ['username', 'description', 'email', 'userid', 'social_networks']
+        if len(data) != 5 or not all(value in data for value in values):
              raise serializers.ValidationError("Error validate")
         return data
     
@@ -36,6 +37,7 @@ class UserRegister(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(required=True)
     description = serializers.CharField(required=True)
+    social_networks = serializers.CharField(required=True)
     def check_pass(self, validated_data):
         password = validated_data['password']
         check_nums = any(character.isdigit() for character in password)
@@ -58,8 +60,8 @@ class UserRegister(serializers.Serializer):
             else: 
                 return True
     def validate(self, data):
-        values = ['username', 'description', 'email', 'password'] 
-        if len(data) != 4 or not all(value in data for value in values):
+        values = ['username', 'description', 'email', 'password', 'social_networks'] 
+        if len(data) != 5 or not all(value in data for value in values):
              raise serializers.ValidationError("Error validate")
         return data
     

@@ -12,3 +12,35 @@
         transform: translateY(0px);
     }
 }
+
+.anime-to_up {
+    opacity: 0;
+    animation: anime-to_up .5s forwards;
+}
+
+.anime-to_down {
+    opacity: 1;
+    animation: anime-to_down .5s forwards;
+}
+
+@keyframes anime-to_up {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+@keyframes anime-to_down {
+    from {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+}

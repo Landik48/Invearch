@@ -22,6 +22,7 @@ class User(APIView):
             "email": request.user.email,
             "username": request.user.username,
             "description": request.user.description,
+            'social_networks': request.user.social_networks,
             "my_startups": get_startups(StartupOwners),
             "my_parties": get_startups(InterestedParties)
         }
@@ -36,6 +37,7 @@ class User(APIView):
                     user.username = request.data['username']
                     user.email = request.data['email']
                     user.description = request.data['description']
+                    user.social_networks = request.data['social_networks']
                     user.password = make_password(request.data['password'])
                     user.save()
                     return Response("Данные обновлены", status=status.HTTP_200_OK)
@@ -104,7 +106,10 @@ class StartupsList(APIView):
 
     @authentication_classes([IsAuthenticated])
     def post(self, request): #связаться с организатором
-        pass
+        if request['option'] == 'add':
+            pass
+        elif request['option'] == 'response':
+            pass
 
     def delete(self, request): #удаление стартапа
         pass
