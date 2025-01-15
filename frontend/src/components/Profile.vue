@@ -1,5 +1,5 @@
 <script setup>
-import {getCookie, getData, user} from "@/shared/modules.js"
+import {getData, sendData, user} from "@/shared/modules.js"
 import {computed, reactive, ref, useTemplateRef} from "vue";
 import { useRouter } from 'vue-router';
 
@@ -9,7 +9,6 @@ const btn_edit = useTemplateRef('btn_edit')
 const confirmation_block = useTemplateRef('confirmation_block')
 const router = useRouter();
 const main = useTemplateRef('main')
-const csrfToken = getCookie('csrftoken')
 
 const option = reactive({
   "option": "",
@@ -34,16 +33,8 @@ async function OnClick(option_el, btn) {
   let response = null
   if (option_el !== "edit") {
     option.option = option_el
-    response = await fetch(`http://localhost/api/users/user/`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken || '',
-      },
-      body: JSON.stringify(option),
-    });
 
+    response = await sendData(`http://localhost/api/users/user/`, option)
     if (response.status !== 200) {
       alert("Неуспешная операция, попробуйте позже")
     }
@@ -57,7 +48,7 @@ async function OnClick(option_el, btn) {
       },
       body: JSON.stringify(form),})
 
-    const data = await response.json()
+    const data = response.data
     if (response.status !== 200) {
       btn.classList.remove('loading');
       btn.style.background = "red"

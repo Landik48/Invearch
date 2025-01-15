@@ -69,6 +69,7 @@ class StartupOwners(models.Model):
 class InterestedParties(models.Model):
     user = models.ForeignKey(Users, related_name='participated_startups', on_delete=models.CASCADE)
     startup = models.ForeignKey('Startups', related_name='participants', on_delete=models.CASCADE)
+    message = models.CharField(max_length=500)
 
     class Meta:
         unique_together = ('user', 'startup')  

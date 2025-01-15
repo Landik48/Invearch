@@ -6,4 +6,5 @@ urlpatterns = [
     path('startups/', StartupsList.as_view()),
     path('users/auth/', auth),
     path('users/register/', register),
+    path('startups/startup/<int:startupid>/', Startup.as_view()),
 ]

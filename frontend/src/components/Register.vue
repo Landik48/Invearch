@@ -1,12 +1,11 @@
 <script setup>
 import {onMounted, reactive, ref, useTemplateRef} from 'vue';
-import {getCookie, getData, user} from "@/shared/modules.js";
+import {sendData, getData, user} from "@/shared/modules.js";
 import { useRouter } from 'vue-router';
 
 const btn = useTemplateRef('btn')
 const data = ref(null)
 const router = useRouter()
-const csrfToken = getCookie('csrftoken')
 
 const form = reactive({
   username: "",
@@ -19,17 +18,10 @@ const form = reactive({
 async function OnClick() {
   btn.value.classList.add('btn-loading', 'loading')
   btn.value.innerHTML = "Загрузка"
-  const response = await fetch(`http://localhost/api/users/register/`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken || '',
-    },
-    body: JSON.stringify(form),
-  });
 
-  data.value = await response.json()
+  const response = await sendData(`http://localhost/api/users/register/`, form)
+  data.value = response.data
+
   if (response.status === 200) {
     btn.value.style.backgroundColor = "#38ef7d"
     setTimeout(() => {

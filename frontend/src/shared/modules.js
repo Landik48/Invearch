@@ -25,10 +25,30 @@ const getData = async (object, name_operation) => {
             throw new Error('Network response was not ok');
         } else {
             object.value = await response.json();
+            console.log(object.value);
         }
     } catch {
         alert("Ошибка на стороне сервера, повторите попытку позже")
     }
+}
+
+const sendData = async (url, form) => {
+    const csrfToken = getCookie('csrftoken')
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken || '',
+        },
+        body: JSON.stringify(form),
+    })
+    const data = await response.json();
+
+    return {
+        status: response.status,
+        data: data,
+    };
 }
 
 function getCookie(name) {
@@ -38,4 +58,4 @@ function getCookie(name) {
     return matches ? decodeURIComponent(matches[1]) : null;
 }
 
-export {user as default, user, getData, getCookie, startups};
+export {user as default, user, getData, startups, sendData};

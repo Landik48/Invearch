@@ -69,3 +69,41 @@ class UsersSerialize(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = '__all__' 
+
+
+class StartupsSerializerSend(serializers.Serializer):
+    userid = serializers.CharField(required=True)
+    message = serializers.CharField(required=True)
+    def check_len(self, validated_data):
+         message = validated_data['message']
+         for key in validated_data:
+            if len(validated_data[key]) > 100 and validated_data[key] != message:
+                return False
+            elif len(validated_data[key]) > 500 and validated_data[key] == message:
+                return False 
+            else: 
+                return True
+    def validate(self, data):
+        values = ['userid', 'message'] 
+        if len(data) != 2 or not all(value in data for value in values):
+             raise serializers.ValidationError("Error validate")
+        return data
+    
+class StartupsSerializerAdd(serializers.Serializer):
+    name = serializers.CharField(required=True)
+    message = serializers.CharField(required=True)
+    picture = serializers.CharField(required=True)
+    def check_len(self, validated_data):
+         message = validated_data['description']
+         for key in validated_data:
+            if len(validated_data[key]) > 100 and validated_data[key] != message:
+                return False
+            elif len(validated_data[key]) > 500 and validated_data[key] == message:
+                return False 
+            else: 
+                return True
+    def validate(self, data):
+        values = ['name', 'description', 'picture'] 
+        if len(data) != 3 or not all(value in data for value in values):
+             raise serializers.ValidationError("Error validate")
+        return data

@@ -15,8 +15,19 @@ class User(APIView):
             startups = class_.objects.filter(user=int(request.user.userid))
             startups_names = []
             for startup in startups:
-                startups_names.append([startup.startup.startupid, startup.startup.name])
+                init_list = [startup.startup.startupid, startup.startup.name]
+                if class_ == StartupOwners:
+                    startups_interesed = InterestedParties.objects.filter(startup=int(startup.startup.startupid))
+                    init_list.append([{'userid': user.user.userid, 
+                                       'username': user.user.username,
+                                       'description': user.user.description, 
+                                       'social_networks': user.user.social_networks,
+                                       'message': user.message} 
+                                      for user in startups_interesed])
+                
+                startups_names.append(init_list)
             return startups_names
+
         data = {
             "userid": request.user.userid,
             "email": request.user.email,
@@ -99,17 +110,57 @@ def register(request): #регистрация
 
 
 class StartupsList(APIView): 
-    def get(self, request): #информация о стартапе
+    def get(self, request): #получение всех стартапов
         startups = Startups.objects.all()
         serializer = StartupsListSerialize(startups, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @authentication_classes([IsAuthenticated])
-    def post(self, request): #связаться с организатором
-        if request['option'] == 'add':
-            pass
-        elif request['option'] == 'response':
-            pass
+    def post(self, request): #добавление стартапа 
+        serializer = StartupsSerializerAdd(data=request.data)
+        if serializer.is_valid():
+            if serializer.check_len(serializer.data):
+                startup = Startups.objects.create(
+                    name = request.data['name'],
+                    description = request.data['description'],
+                    picture = request.data['picture']
+                )
+                startup.save()
+                return Response('Стартап создан', status=status.HTTP_201_CREATED)
+            else:
+                return Response("Слишком много символов", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response("Ошибка данных", status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request): #удаление стартапа
-        pass
+class Startup(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, startupid): #получение конкретного стартапа
+        startup = Startups.objects.get(startupid=int(startupid))
+        data = {
+            "startupid": startup.startupid,
+            "name": startup.name,
+            "description": startup.description,
+            "picture": startup.picture,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    
+    def post(self, request, startupid): #связаться с организатором
+        serializer = StartupsSerializerSend(data=request.data)
+        if serializer.is_valid():
+            if serializer.check_len(serializer.data):
+                user = Users.objects.get(userid=(request.data['userid']))
+                startup = Startups.objects.get(startupid=int(startupid))
+                try:
+                    connect = InterestedParties.objects.create(user=user, startup=startup, message=request.data['message'])
+                    connect.save()
+                    return Response("Заявка отправлена", status=status.HTTP_200_OK)
+                except: return Response("Заявка уже была подана", status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response("Слишком много символов", status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response("Ошибка данных", status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, startupid): #удаление стартапа
+        startup = Startups.objects.get(startupid=int(startupid))
+        startup.delete()
