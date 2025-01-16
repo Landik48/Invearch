@@ -25,17 +25,16 @@ const getData = async (object, name_operation) => {
             throw new Error('Network response was not ok');
         } else {
             object.value = await response.json();
-            console.log(object.value);
         }
     } catch {
         alert("Ошибка на стороне сервера, повторите попытку позже")
     }
 }
 
-const sendData = async (url, form) => {
+const sendData = async (url, form, type_request='POST') => {
     const csrfToken = getCookie('csrftoken')
     const response = await fetch(url, {
-        method: 'POST',
+        method: type_request,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',

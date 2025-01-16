@@ -91,14 +91,15 @@ class StartupsSerializerSend(serializers.Serializer):
     
 class StartupsSerializerAdd(serializers.Serializer):
     name = serializers.CharField(required=True)
-    message = serializers.CharField(required=True)
+    description = serializers.CharField(required=True)
     picture = serializers.CharField(required=True)
     def check_len(self, validated_data):
-         message = validated_data['description']
+         description = validated_data['description']
+         picture = validated_data['picture']
          for key in validated_data:
-            if len(validated_data[key]) > 100 and validated_data[key] != message:
+            if len(validated_data[key]) > 100 and (validated_data[key] != description or validated_data[key] != picture):
                 return False
-            elif len(validated_data[key]) > 500 and validated_data[key] == message:
+            elif len(validated_data[key]) > 500 and (validated_data[key] == description or validated_data[key] == picture):
                 return False 
             else: 
                 return True

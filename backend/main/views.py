@@ -44,13 +44,16 @@ class User(APIView):
         if serializer.is_valid():
             if serializer.check_len(serializer.data):
                 if serializer.check_pass(serializer.data):
-                    user = Users.objects.get(userid=request.user.userid)
-                    user.username = request.data['username']
-                    user.email = request.data['email']
-                    user.description = request.data['description']
-                    user.social_networks = request.data['social_networks']
-                    user.password = make_password(request.data['password'])
-                    user.save()
+                    try:
+                        user = Users.objects.get(userid=request.user.userid)
+                        user.username = request.data['username']
+                        user.email = request.data['email']
+                        user.description = request.data['description']
+                        user.social_networks = request.data['social_networks']
+                        user.password = make_password(request.data['password'])
+                        user.save()
+                    except:
+                        return Response("Почта занята", status=status.HTTP_400_BAD_REQUEST)
                     return Response("Данные обновлены", status=status.HTTP_200_OK)
                 else:
                     return Response("Слабый пароль", status=status.HTTP_400_BAD_REQUEST)
@@ -120,12 +123,17 @@ class StartupsList(APIView):
         serializer = StartupsSerializerAdd(data=request.data)
         if serializer.is_valid():
             if serializer.check_len(serializer.data):
-                startup = Startups.objects.create(
-                    name = request.data['name'],
-                    description = request.data['description'],
-                    picture = request.data['picture']
-                )
-                startup.save()
+                try:
+                    startup = Startups.objects.create(
+                        name = request.data['name'],
+                        description = request.data['description'],
+                        picture = request.data['picture']
+                    )
+                    startup.save()
+                except: return Response("Имя стартапа занято", status=status.HTTP_400_BAD_REQUEST)
+                user = Users.objects.get(userid=int(request.user.userid))
+                owner = StartupOwners.objects.create(user=user, startup=startup)
+                owner.save()
                 return Response('Стартап создан', status=status.HTTP_201_CREATED)
             else:
                 return Response("Слишком много символов", status=status.HTTP_400_BAD_REQUEST)
@@ -164,3 +172,4 @@ class Startup(APIView):
     def delete(self, request, startupid): #удаление стартапа
         startup = Startups.objects.get(startupid=int(startupid))
         startup.delete()
+        return Response("Стартап удалён", status=status.HTTP_200_OK)

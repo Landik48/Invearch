@@ -129,6 +129,5 @@ body {
     font-size: 20px;
     margin-top: 0;
     width: 100%;
-    word-break: break-all;
-    text-align: center;
+    text-align: left;
 }
