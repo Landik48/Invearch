@@ -9,10 +9,10 @@
     font-family: inherit;
     width: 100%;
     border: 0;
-    border-bottom: 2px solid #9b9b9b;
+    border-bottom: 2px solid var(--text);
     outline: 0;
     font-size: 1.3rem;
-    color: #FFFFFF;
+    color: var(--text);
     padding: 7px 0;
     background: transparent;
     transition: border-color 0.2s;
@@ -34,7 +34,7 @@
     display: block;
     transition: 0.2s;
     font-size: 1rem;
-    color: #9b9b9b;
+    color: var(--text);
 }
 
 .form__field:focus {
@@ -44,13 +44,13 @@
         display: block;
         transition: 0.2s;
         font-size: 1rem;
-        color: #11998e;
+        color: var(--contrast);
         font-weight:700;
     }
     padding-bottom: 6px;
     font-weight: normal;
     border-width: 3px;
-    border-image: linear-gradient(to right, #11998e, #38ef7d);
+    border-color: var(--contrast);
     border-image-slice: 1;
 }
 /* reset input */
@@ -72,24 +72,24 @@ field {
 
 .send-btn {
     font-size: 16px;
-    background-color: #9b9b9b;
+    background-color: var(--header);
     border: none;
     border-radius: 5px;
     width: 80%;
     height: 50px;
+    color: white;
     margin: 10px;
     transition: .3s;
     transform: scale(1);
 }
 
 .send-btn:hover {
-    background: linear-gradient(to right, #11998e, #38ef7d);
+    background: var(--contrast);
     transition: .3s;
     transform: scale(1.05);
 }
 
 .btn-loading {
-    background: linear-gradient(to right, #11998e, #38ef7d);
     animation: gradient 2s infinite linear;
     background-size: 200% 200%;;
 }
@@ -138,5 +138,5 @@ field {
 .svg-up{
     width: 50px;
     height: 50px;
-    filter: brightness(0) invert(1);
+    filter:invert(20%) sepia(8%) saturate(516%) hue-rotate(355deg) brightness(95%) contrast(85%);;
 }

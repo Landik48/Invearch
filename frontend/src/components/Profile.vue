@@ -58,7 +58,6 @@ async function OnClick(option_el, btn, form) {
 
   } else if (option_el === 'delete_startup') {
     const form_delete = {}
-    console.log(form)
     response = await sendData(`http://localhost/api/startups/startup/${form}/`, form_delete, 'DELETE')
     if (response.status !== 200) {
       alert("Неуспешная операция, попробуйте позже")
@@ -140,15 +139,17 @@ onMounted(() => {
       <p><h3>Обо мне:</h3> {{ user.description }}</p><br>
       <h3>Мои стартапы:</h3>
       <p>(нажмите, чтобы увидеть отклики)</p>
-      <ul class="user-ul">
-        <p class="line-startups block-description" v-for="startup in user.my_startups">
+      <ul class="user-ul" v-if="Boolean(user.my_startups[0])">
+        <p class="line-startups block-description" style="text-align: left"
+           v-for="startup in user.my_startups">
           <li>
             <p @click="toggleElement($event.target.parentElement.parentElement)">
               <i>{{ startup[1] }}</i>
             </p>
             <div class="interesed-block" >
-              <p class="margin">Отклики:</p>
-              <ol>
+              <p class="margin" v-if="Boolean(startup[2][0])">Отклики:</p>
+              <p v-if="!Boolean(startup[2][0])"><i>Нет откликов</i></p>
+              <ol v-if="Boolean(startup[2][0])">
                 <li class="margin" v-for="user_startup in startup[2]">
                   {{user_startup.username}}
                   <p class="margin"><i>О пользователе</i>: {{user_startup.description}}</p>
@@ -163,8 +164,14 @@ onMounted(() => {
           </li>
         </p>
       </ul>
+      <p class="margin" v-if="!Boolean(user.my_startups[0])"><i>- Данные отсутствуют</i></p>
       <h3>Мои отклики:</h3>
-      <p class="line-startups block-description" v-for="startup in user.my_parties">{{ startup }}</p>
+      <ul v-if="Boolean(user.my_parties[0])">
+        <li v-for="startup in user.my_parties">
+          <p class="line-startups block-description">{{ startup[1] }}</p>
+        </li>
+      </ul>
+      <p class="margin" v-if="!Boolean(user.my_parties[0])"><i>- Данные отсутствуют</i></p>
       <div class="group_btns">
         <button class="exit-btn" @click="OnClick('exit', btn_exit, form_user)" ref="btn_exit">Выход</button>
         <button class="exit-btn"
@@ -253,22 +260,21 @@ onMounted(() => {
 <style scoped>
 .main {
   width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .block-user {
-  margin-top: 40px;
-  border-radius: 10px;
+  max-width: 1920px;
+  margin: 20px auto;
+  border-radius: 20px;
   padding: 20px;
+  box-sizing: border-box;
   width: 90%;
   display: flex;
-  background-color: rgba(0,43,54,1);
+  box-shadow: 0px 0px 20px rgba(128, 128, 128, 0.2);
   flex-wrap: wrap;
-  max-width: 800px;
 }
 
 h3 {
@@ -323,6 +329,16 @@ p {
 .user-ul {
   margin-top: 0;
   padding: 15px;
+}
+
+@media (max-width: 500px) {
+  .user-ul {
+    padding: 5px;
+  }
+  .line-startups {
+    margin-left: 10px;
+    margin-top: 5px;
+  }
 }
 
 .interesed-block {

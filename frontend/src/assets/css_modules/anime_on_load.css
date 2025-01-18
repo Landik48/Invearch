@@ -44,3 +44,64 @@
         transform: translateY(50px);
     }
 }
+
+.smooth-appearance {
+    animation: smooth-appearance-anime 1s alternate forwards;
+}
+
+@keyframes smooth-appearance-anime {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active в <2.1.8 */ {
+    opacity: 0;
+}
+
+
+.loading::after {
+    content: '\00a0\00a0\00a0';
+    animation: progress-ellipsis 1.5s infinite;
+}
+
+@keyframes progress-ellipsis {
+    0% {
+        content: '\00a0\00a0\00a0';
+    }
+    30% {
+        content: '.\00a0\00a0';
+    }
+    60% {
+        content: '..\00a0';
+    }
+    90% {
+        content: '...';
+    }
+}
+
+.anime-from-up {
+    opacity: 0;
+    animation: anime-from-up .5s forwards;
+}
+
+@keyframes anime-from-up {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    10% {
+        opacity: .3;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}

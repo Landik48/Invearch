@@ -1,12 +1,17 @@
 <script setup>
 import { onMounted, ref, useTemplateRef, onBeforeUnmount } from 'vue';
 import {user, getData, startups} from '@/shared/modules.js'
+import Adaptive_links from "@/components/modules/adaptive_links.vue";
+import adaptive_links from "@/components/modules/adaptive_links.vue";
 
 const loading = ref(false)
 const load_el = useTemplateRef('loading')
 const scroll_flag = ref(null)
 const containerRef = ref(null);
 const up_block = useTemplateRef('up-block')
+const nav_view = ref(false)
+let isMobile = ref(window.matchMedia("(max-width:500px)").matches);
+const nav_block = useTemplateRef('nav_block')
 
 const handleIntersection = (entries) => {
   entries.forEach((entry) => {
@@ -45,8 +50,20 @@ const scrollToTop = () => {
   });
 };
 
+function BorderEdit(el) {
+  if (nav_view.value) {
+    el.style.borderRadius = '15px 15px 0 0'
+  } else {
+    el.style.borderRadius = '15px'
+  }
+}
+
 onMounted(() => {
   updateUser();
+
+  window.addEventListener('resize', () => {
+    isMobile.value = window.matchMedia("(max-width:500px)").matches;
+  });
 
   const observer = new IntersectionObserver(handleIntersection, {
     root: containerRef.value,
@@ -72,13 +89,13 @@ onMounted(() => {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   </head>
-  <nav class="anime-opacity-smooth" ref="scroll_flag">
-    <RouterLink to="/" class="router-text">Главная</RouterLink>
-    <RouterLink to="/startups" class="router-text">Стартапы</RouterLink>
-    <RouterLink to="/profile" class="router-text smooth-appearance" v-if="user != null && !loading">Профиль</RouterLink>
-    <RouterLink to="/auth" class="router-text smooth-appearance" v-if="user == null && !loading">Авторизация</RouterLink>
-    <div class="loading router-text" v-if="loading" ref="loading">Соединение</div>
+
+  <nav class="anime-opacity-smooth nav-adaptive" ref="scroll_flag">
+    <img @click="nav_view = !nav_view;BorderEdit($event.target.parentElement)"
+         class="svg-up burger margin" src="../src/components/icons/burger.svg" alt="">
+    <Adaptive_links :user="user" :loading="loading" v-if="!isMobile"></Adaptive_links>
   </nav>
+  <Adaptive_links :user="user" :loading="loading" v-if="isMobile && nav_view" ref="nav_block"></Adaptive_links>
 
   <div class="up-block anime-to_up" ref="up-block">
     <img class="svg-up" src="../src/components/icons/to_up.svg" alt="" @click="scrollToTop" />
@@ -91,15 +108,51 @@ onMounted(() => {
 
 <style scoped>
   nav {
-    width: 100%;
+    margin: 0 auto;
+    width: 90%;
     height: 50px;
     text-decoration: none;
     display: flex;
-    justify-content: space-around;
     align-items: center;
-    background-color: rgba(0,43,54,1);
+    justify-content: space-around;
+    background-color: var(--header);
     border-radius: 15px;
-    max-width: 840px;
-    margin: 0 auto;
+    max-width: 1920px;
   }
+
+  .burger {
+    display: none;
+    width: 40px;
+    height: 40px;
+  }
+
+  @media (max-width: 500px) {
+    .margin {
+      margin: 0px 20px 0px 20px;
+    }
+
+    .nav-adaptive {
+      justify-content: space-between;
+    }
+
+    .burger {
+      display: block;
+    }
+
+    .adaptive-links {
+      width: 90%;
+      margin: 0 auto;
+      background-color: var(--header);
+      border-radius: 0 0 15px 15px;
+      flex-wrap: wrap;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .adaptive-links > * {
+      margin-right: 5px;
+      margin-left: 5px;
+    }
+  }
+
 </style>

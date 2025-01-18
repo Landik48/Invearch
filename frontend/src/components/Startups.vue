@@ -75,19 +75,21 @@ onMounted(() => {
   </div>
 
   <div ref="main">
-    <h1 class="title">Каталог стартапов</h1>
-
-    <div class="center-block-auth anime-opacity-smooth" v-for="startup in startups">
-      <img class="text-auth img-startup" :src="startup.picture" alt="Картинка отсутствует">
-      <h2 class="title">Название: {{ startup.name }}</h2>
-      <p class="block-description">{{ startup.description }}</p>
-      <button class="send-btn" @click="main.style.filter = 'blur(5px)';
+    <h1 class="title smooth-appearance">Каталог стартапов</h1>
+    <div class="container-startups anime-to_up">
+      <div class="block-startup" v-if="Boolean(startups[0])" v-for="startup in startups">
+        <img class="text-auth img-startup" :src="startup.picture" alt="Картинка отсутствует">
+        <h2 class="title">Название: {{ startup.name }}</h2>
+        <p class="block-description">{{ startup.description }}</p>
+        <button class="send-btn" @click="main.style.filter = 'blur(5px)';
         option.block_btn = true;
         confirmation_block.style.display = 'flex'
         option.startupid = startup.startupid;"
-              :disabled="option.block_btn"
-              ref="btn">Мне интересно!</button>
+                :disabled="option.block_btn"
+                ref="btn">Мне интересно!</button>
+      </div>
     </div>
+    <h3 class="title" v-if="!Boolean(startups[0])"><i>Стартапы отсутствуют</i></h3>
   </div>
 </template>
 
@@ -105,5 +107,25 @@ onMounted(() => {
 
 .fixed {
   position: fixed;
+}
+
+.container-startups {
+  margin: 0px auto;
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  column-gap: 30px;
+  row-gap: 30px;
+  max-width: 1920px;
+}
+
+.block-startup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  box-shadow: 0px 0px 20px rgba(128, 128, 128, 0.2);
+  border-radius: 10px;
 }
 </style>
