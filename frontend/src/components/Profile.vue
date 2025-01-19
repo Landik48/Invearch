@@ -10,6 +10,7 @@ const btn_create = useTemplateRef('btn_create')
 const confirmation_block = useTemplateRef('confirmation_block')
 const router = useRouter();
 const main = useTemplateRef('main')
+const activeIndex = ref(false)
 
 const option = reactive({
   "option": "",
@@ -98,13 +99,8 @@ async function OnClick(option_el, btn, form) {
   }
 }
 
-const toggleElement = (elements) => {
-  const interesedBlock = elements.querySelectorAll('div')[0]
-  if (interesedBlock.style.display === 'none') {
-    interesedBlock.style.display = 'block'
-  } else {
-    interesedBlock.style.display = 'none'
-  }
+const toggleBlock = (index) => {
+  activeIndex.value = activeIndex.value === index ? null : index;
 };
 
 onMounted(() => {
@@ -141,12 +137,12 @@ onMounted(() => {
       <p>(нажмите, чтобы увидеть отклики)</p>
       <ul class="user-ul" v-if="Boolean(user.my_startups[0])">
         <p class="line-startups block-description" style="text-align: left"
-           v-for="startup in user.my_startups">
+           v-for="(startup, index) in user.my_startups">
           <li>
-            <p @click="toggleElement($event.target.parentElement.parentElement)">
+            <p @click="toggleBlock(index)">
               <i>{{ startup[1] }}</i>
             </p>
-            <div class="interesed-block" >
+            <div class="interesed-block" v-if="activeIndex === index">
               <p class="margin" v-if="Boolean(startup[2][0])">Отклики:</p>
               <p v-if="!Boolean(startup[2][0])"><i>Нет откликов</i></p>
               <ol v-if="Boolean(startup[2][0])">
@@ -339,9 +335,5 @@ p {
     margin-left: 10px;
     margin-top: 5px;
   }
-}
-
-.interesed-block {
-  display: none;
 }
 </style>
