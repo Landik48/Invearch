@@ -117,7 +117,7 @@ onMounted(() => {
     justify-content: space-around;
     background-color: var(--header);
     border-radius: 15px;
-    max-width: 1920px;
+    max-width: 1200px;
   }
 
   .burger {

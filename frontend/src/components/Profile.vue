@@ -255,19 +255,20 @@ onMounted(() => {
 
 <style scoped>
 .main {
-  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  width: 90%;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .block-user {
-  max-width: 1920px;
-  margin: 20px auto;
+  max-width: 1200px;
   border-radius: 20px;
   padding: 20px;
-  box-sizing: border-box;
-  width: 90%;
+  margin: 20px 0;
+  width: 100%;
   display: flex;
   box-shadow: 0px 0px 20px rgba(128, 128, 128, 0.2);
   flex-wrap: wrap;

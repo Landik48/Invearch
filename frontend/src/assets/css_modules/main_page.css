@@ -1,0 +1,133 @@
+#main {
+    margin-bottom: 50px;
+}
+
+#hello-page {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
+    margin-top: 80px;
+}
+
+.hello-page__img {
+    width: 70%;
+    max-width: 400px;
+    border-radius: 30px;
+}
+
+.hello-page__text {
+    max-width: 700px;
+    margin-right: 40px;
+    flex-grow: 1;
+}
+
+.title {
+    font-size: 30px;
+}
+
+@media (max-width: 800px) {
+    #hello-page {
+        flex-wrap: wrap-reverse;
+        justify-content: center;
+        margin-top: 40px;
+    }
+
+    .hello-page__text {
+        margin-top: 10px;
+        margin-right: 0;
+        text-align: center;
+    }
+
+    .hello-page__img {
+        width: 85%;
+    }
+
+    .title {
+        font-size: 25px;
+    }
+
+    .description {
+        font-size: 14px;
+    }
+}
+
+.section {
+    margin: 0px auto;
+    margin-top: 100px;
+    width: 90%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+#description-page {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.num {
+    font-size: 25px;
+    color: var(--contrast);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0px 0px 4px rgba(128, 128, 128, 0.5) inset;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+}
+
+.description-page__list__item {
+    display: flex;
+    box-shadow: 0px 0px 20px rgba(128, 128, 128, 0.2);
+    border-radius: 15px;
+    padding: 10px;
+    align-items: center;
+}
+
+.text-list {
+    width: 70%;
+}
+
+.description-page__title {
+    margin-bottom: 40px;
+}
+
+.description-page__list_el {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.description-page__list {
+    width: 100%;
+    display: grid;
+    column-gap: 25px;
+    row-gap: 25px;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.block-description {
+    text-align: center;
+    width: 100%;
+}
+
+.contrast {
+    color: var(--contrast);
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70px;
+    flex-wrap: wrap;
+}
+
+.title-footer {
+    width: 100%;
+    text-align: center;
+    margin: 10px 0 0 0;
+}

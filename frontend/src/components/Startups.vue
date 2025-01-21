@@ -116,7 +116,7 @@ onMounted(() => {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   column-gap: 30px;
   row-gap: 30px;
-  max-width: 1920px;
+  max-width: 1200px;
 }
 
 .block-startup {
