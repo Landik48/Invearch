@@ -16,8 +16,8 @@
 }
 
 body {
-overflow-x: hidden;
-  background: var(--background);
+    overflow-x: hidden;
+    background: var(--background);
 }
 
 .router-text {
@@ -64,7 +64,7 @@ overflow-x: hidden;
 
 .confirmation_block {
     width: 70%;
-    max-width: 1920px;
+    max-width: 1200px;
     background-color: var(--background);
     border-radius: 10px;
     padding: 10px;
@@ -140,4 +140,15 @@ overflow-x: hidden;
     .form__field,  &:placeholder-shown ~ .form__label {
         font-size: 16px;
     }
+}
+
+.subtitle {
+    text-align: center;
+}
+
+#main {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow: hidden
 }

@@ -11,9 +11,10 @@ onMounted(() => {
   <div id='main'>
     <section class="section" id='hello-page'>
       <div class="hello-page__text" data-aos="zoom-in-right">
-        <h1 class="hello-page__text_title title">Startlup</h1>
-        <p class="hello-page__text_description description">Loer fjhsj daufg adpfavd fhpvahfvb dhpbaf dfb apdifba dpifads fpiasdbf apdadsfadsfhodvafvda asdg asd fass
-          Loer fjhsj daufg adpfavd fhpvahfvb dhpbaf dfb apdifba dpifads fpiasdbf apdadsfadsfhodvafvda</p>
+        <h1 class="hello-page__text_title title">Invearch</h1>
+        <h4 class="hello-page__text_title subtitle"><i>Место, где стартапы встречают единомышленников</i></h4>
+        <p class="hello-page__text_description description">
+Invearch — это уникальная платформа, где стартапы могут продемонстрировать свои проекты перед заинтересованными инвесторами и найти единомышленников для сотрудничества. Наша цель — создать среду, способствующую обмену идеями и ресурсами, чтобы каждый стартап получил поддержку, необходимую для успешного развития.</p>
       </div>
       <img class="hello-page__img" src="../shared/imgs/startap.jpg" data-aos="zoom-in-left">
     </section>

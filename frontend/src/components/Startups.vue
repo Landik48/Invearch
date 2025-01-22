@@ -79,7 +79,7 @@ onMounted(() => {
     <div class="container-startups anime-to_up">
       <div class="block-startup" v-if="Boolean(startups[0])" v-for="startup in startups">
         <img class="text-auth img-startup" :src="startup.picture" alt="Картинка отсутствует">
-        <h2 class="title">Название: {{ startup.name }}</h2>
+        <h2 class="title">{{ startup.name }}</h2>
         <p class="block-description">{{ startup.description }}</p>
         <button class="send-btn" @click="main.style.filter = 'blur(5px)';
         option.block_btn = true;

@@ -60,6 +60,7 @@ async function OnClick(option_el, btn, form) {
   } else if (option_el === 'delete_startup') {
     const form_delete = {}
     response = await sendData(`http://localhost/api/startups/startup/${form}/`, form_delete, 'DELETE')
+    await getData(startups, 'startups')
     if (response.status !== 200) {
       alert("Неуспешная операция, попробуйте позже")
     }
@@ -164,7 +165,7 @@ onMounted(() => {
       <h3>Мои отклики:</h3>
       <ul v-if="Boolean(user.my_parties[0])">
         <li v-for="startup in user.my_parties">
-          <p class="line-startups block-description">{{ startup[1] }}</p>
+          <p class="line-startups block-description" style="text-align: left">{{ startup[1] }}</p>
         </li>
       </ul>
       <p class="margin" v-if="!Boolean(user.my_parties[0])"><i>- Данные отсутствуют</i></p>
@@ -267,6 +268,7 @@ onMounted(() => {
   max-width: 1200px;
   border-radius: 20px;
   padding: 20px;
+  box-sizing: border-box;
   margin: 20px 0;
   width: 100%;
   display: flex;
